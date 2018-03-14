@@ -1,0 +1,35 @@
+{
+    "name": "rom-manager-api",
+    "main": "server.js",
+    "version": "1.0.0",
+    "description": "Rest api for rom managing",
+    "author": "fernandofreije <ffreijefuente@gmail.com>",
+    "license": "ICS",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "./node_modules/nodemon/bin/nodemon.js server.js",
+        "lint": "eslint --ext .js src ."
+    },
+    "dependencies": {
+        "bcrypt": "^1.0.3",
+        "body-parser": "~1.18.2",
+        "express": "~4.16.2",
+        "express-session": "^1.15.6",
+        "mongoose": "~5.0.9",
+        "morgan": "^1.9.0",
+        "save": "^2.3.2",
+        "swagger-jsdoc": "^1.9.7",
+        "swagger-ui-express": "^2.0.15"
+    },
+    "devDependencies": {
+        "eslint": "^4.15.0",
+        "eslint-config-standard": "^11.0.0",
+        "eslint-friendly-formatter": "^3.0.0",
+        "eslint-loader": "^2.0.0",
+        "eslint-plugin-import": "^2.7.0",
+        "eslint-plugin-node": "^6.0.1",
+        "eslint-plugin-promise": "^3.4.0",
+        "eslint-plugin-standard": "^3.0.1",
+        "nodemon": "^1.17.1"
+    }
+}
