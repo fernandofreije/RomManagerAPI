@@ -5,7 +5,7 @@ var Rom = require('../models/Rom');
 
 romRoutes.route('/').post(function (req, res) {
     var rom = new Rom(req.body);
-    rom.user = req.params.user_id
+    rom.user = req.session.userId
     rom.save()
         .then(rom => {
             res.status(200).json({
@@ -20,7 +20,7 @@ romRoutes.route('/').post(function (req, res) {
 
 romRoutes.route('/').get(function (req, res) {
     Rom.find({
-        'user': req.params.user_id
+        'user': req.session.userId
     }, function (err, roms) {
         if (err) {
             console.error(err);
@@ -33,7 +33,7 @@ romRoutes.route('/').get(function (req, res) {
 romRoutes.route('/:id').get(function (req, res) {
     Rom.find({
             _id: req.params.id,
-            user: req.params.user_id
+            user: req.session.userId
         },
         function (err, rom) {
             if (err) res.json(err);
@@ -45,7 +45,7 @@ romRoutes.route('/:id').get(function (req, res) {
 romRoutes.route('/:id').put(function (req, res) {
     Rom.findAndModify({
         _id: req.params.id,
-        user: req.params.user_id
+        user: req.session.userId
     }, req.body, function (err, rom) {
         if (err) res.json(err);
         else res.json(`Successfully removed rom ${rom.title}`);
@@ -56,7 +56,7 @@ romRoutes.route('/:id').put(function (req, res) {
 romRoutes.route('/:id').delete(function (req, res) {
     Rom.findAndRemove({
         _id: req.params.id,
-        user: req.params.user_id
+        user: req.session.userId
     }, function (err, rom) {
         if (err) res.json(err);
         else res.json(`Successfully removed rom ${rom.title}`);

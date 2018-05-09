@@ -6,11 +6,22 @@ var Schema = mongoose.Schema;
 var User = new Schema({
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
+    },
+    user: {
+        type: String,
+        required: true,
+        unique: true
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        default: false
+    },
+    admin: {
+      type: Boolean,
+      required: true
     }
 }, {
     collection: 'users'
@@ -27,4 +38,26 @@ User.pre('save', function (next) {
     })
   });
 
+User.statics.authenticate = function (login, password, callback) {
+    console.log(login)
+    this.findOne({$or:[{email: login}, {user: login}]}).exec(function (err, user) {
+        console.log(user)
+        if (err) {
+          return callback(err)
+        } else if (!user) {
+          var err = new Error('User not found.');
+          err.status = 401;
+          return callback(err);
+        }
+        bcrypt.compare(password, user.password, function (err, result) {
+          if (result === true) {
+            return callback(null, user);
+          } else {
+            return callback();
+          }
+        })
+      });
+  }
+
 module.exports = mongoose.model('User', User);
+
