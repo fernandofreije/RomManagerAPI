@@ -1,5 +1,4 @@
-var express = require('express');
-var userRoutes = express.Router()
+const express = require('express');
 
 /**
  * @swagger
@@ -17,26 +16,20 @@ var userRoutes = express.Router()
  *       type: object
  *       required:
  *         - email
- *         - 
  *       properties:
  *          email:
  *            type: string
  */
-var User = require('../models/User');
+const User = require('../models/User');
+
+const userRoutes = express.Router();
 
 
-userRoutes.route('/').post(function (req, res) {
-  var user = new User(req.body);
-  user.save()
-    .then(user => {
-      res.status(200).json({
-        'message': `User ${user.email} added successfully`
-      });
-    })
-    .catch(err => {
-      console.error(err)
-      res.status(400).send("Unable to save to database");
-    });
+userRoutes.route('/').post((req, res) => {
+  const newUser = new User(req.body);
+  newUser.save()
+    .then(user => res.status(200).json({ message: `User ${user.email} added successfully` }))
+    .catch(error => res.status(400).send(error));
 });
 
 /**
@@ -55,39 +48,31 @@ userRoutes.route('/').post(function (req, res) {
    *           items:
    *             $ref: '#/definitions/User'
    */
-userRoutes.route('/').get(function (req, res) {
-  User.find(function (err, users) {
-    if (err) {
-      console.error(err);
-    } else {
-      res.json(users);
-    }
-  });
+userRoutes.route('/').get((req, res) => {
+  User.find()
+    .then(users => res.status(200).json(users))
+    .catch(error => res.status(400).json(error));
 });
 
 
-userRoutes.route('/:id').get(function (req, res) {
-  var id = req.params.id;
-  User.findById(id, function (err, user) {
-    res.json(user);
-  });
+userRoutes.route('/:id').get((req, res) => {
+  const { id } = req.params;
+  User.findById(id)
+    .then(user => res.status(200).json(user))
+    .catch(error => res.status(400).json(error));
 });
 
-userRoutes.route('/:id').put(function (req, res) {
-  User.findByIdAndUpdate(req.params.id, req.body,
-    function (err, user) {
-      if (err) res.json(err);
-      else res.json(`Successfully updated user ${user.email}`);
-    });
+userRoutes.route('/:id').put((req, res) => {
+  User.findByIdAndUpdate(req.params.id, req.body)
+    .then(user => res.status(200).json({ message: `Successfully updated user ${user.email}` }))
+    .catch(error => res.status(400).json(error));
 });
 
 // Defined delete | remove | destroy route
-userRoutes.route('/:id').delete(function (req, res) {
-  User.findByIdAndRemove(req.params.id,
-    function (err, user) {
-      if (err) res.json(err);
-      else res.json(`Successfully removed user ${user.email}`);
-    });
+userRoutes.route('/:id').delete((req, res) => {
+  User.findByIdAndRemove(req.params.id)
+    .then(user => res.status(200).json(`Successfully removed user ${user.email}`))
+    .catch(error => res.status(400).json(error));
 });
 
 module.exports = userRoutes;

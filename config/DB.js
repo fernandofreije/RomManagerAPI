@@ -1,3 +1,3 @@
 module.exports = {
-    DB: 'mongodb://localhost:27017/rommanager'
-  };
+  DB: 'mongodb://localhost:27017/rommanager'
+};

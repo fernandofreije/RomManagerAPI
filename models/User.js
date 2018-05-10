@@ -1,63 +1,61 @@
-var mongoose = require('mongoose');
-var bcrypt = require('bcrypt')
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
+const { Schema } = mongoose;
 
-var User = new Schema({
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    user: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    password: {
-        type: String,
-        required: true,
-        default: false
-    },
-    admin: {
-      type: Boolean,
-      required: true
-    }
+const User = new Schema({
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  user: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  password: {
+    type: String,
+    required: true,
+    default: false
+  },
+  admin: {
+    type: Boolean,
+    default: false
+  }
 }, {
-    collection: 'users'
+  collection: 'users'
 });
 
-User.pre('save', function (next) {
-    var user = this;
-    bcrypt.hash(user.password, 10, function (err, hash){
-      if (err) {
-        return next(err);
-      }
+User.pre('save', function hashPass(next) {
+  const user = this;
+  bcrypt.hash(user.password, 10)
+    .then(hash => {
       user.password = hash;
-      next();
+      return next();
     })
-  });
+    .catch(error => next(error));
+});
 
-User.statics.authenticate = function (login, password, callback) {
-    console.log(login)
-    this.findOne({$or:[{email: login}, {user: login}]}).exec(function (err, user) {
-        console.log(user)
-        if (err) {
-          return callback(err)
-        } else if (!user) {
-          var err = new Error('User not found.');
-          err.status = 401;
-          return callback(err);
-        }
-        bcrypt.compare(password, user.password, function (err, result) {
+User.statics.authenticate = function authenticate(login, password, callback) {
+  this.findOne({ $or: [{ email: login }, { user: login }] })
+    .then(user => {
+      if (!user) {
+        const notFoundError = new Error('User not found.');
+        notFoundError.status = 400;
+        return callback(notFoundError);
+      }
+      bcrypt.compare(password, user.password)
+        .then(result => {
           if (result === true) {
             return callback(null, user);
-          } else {
-            return callback();
           }
-        })
-      });
-  }
+          return callback();
+        });
+      return null;
+    })
+    .catch(error => callback(error));
+};
 
 module.exports = mongoose.model('User', User);
 

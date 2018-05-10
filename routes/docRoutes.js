@@ -1,23 +1,23 @@
-var express = require('express');
-var swaggerUi = require('swagger-ui-express');
-var swaggerJSDoc = require('swagger-jsdoc')
+const express = require('express');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJSDoc = require('swagger-jsdoc');
 
-var docRoutes = express.Router()
+const docRoutes = express.Router();
 
-//Swagger definition
-var swaggerSpec = swaggerJSDoc({
-    swaggerDefinition: {
-        info: {
-            title: 'RomManagerAPI', 
-            version: '1.0.0', 
-            basePath: '/'
-        },
+// Swagger definition
+const swaggerSpec = swaggerJSDoc({
+  swaggerDefinition: {
+    info: {
+      title: 'RomManagerAPI',
+      version: '1.0.0',
+      basePath: '/'
     },
-    apis: [
-        './docRoutes.js',
-        './userRoutes.js'
-    ], 
-})
+  },
+  apis: [
+    './docRoutes.js',
+    './userRoutes.js'
+  ]
+});
 
 /**
  * @swagger
