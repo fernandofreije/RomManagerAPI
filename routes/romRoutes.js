@@ -48,4 +48,17 @@ romRoutes.route('/:id').delete((req, res) => {
     .catch(error => res.status(400).json(error));
 });
 
+// Defined delete | remove | destroy route
+romRoutes.route('/:id/upload').post((req, res) => {
+  if (!req.files) return res.status(400).send('No files were uploaded.');
+
+  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+  const { romFile } = req.files;
+
+  // Use the mv() method to place the file somewhere on your server
+  romFile.mv(`${global.basedir}/uploadedRoms/on/your/server/filename.jpg`)
+    .then(file => res.send(`File ${file.name} uploaded!`))
+    .catch(error => res.status(400).json(error));
+});
+
 module.exports = romRoutes;

@@ -8,6 +8,12 @@ const userRoutes = require('./routes/userRoutes');
 const romRoutes = require('./routes/romRoutes');
 const sessionRoutes = require('./routes/sessionRoutes');
 const morgan = require('morgan');
+const fileUpload = require('express-fileupload');
+const uuid = require('uuid/v4');
+const cors = require('cors');
+
+global.basedir = __dirname;
+
 
 const app = express();
 const port = process.env.PORT || 8080; // set our port
@@ -23,28 +29,34 @@ mongoose.connect(config.DB).then(
 );
 
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(bodyParser.json());
+app.use(fileUpload());
 app.use(morgan('dev'));
 
 app.use(session({
+  genid: () => uuid(),
   secret: '@lavidaesdura@',
   resave: true,
   saveUninitialized: false
+}));
+
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
 }));
 
 function requiresLogin(req, res, next) {
   if (req.session && req.session.userId) {
     return next();
   }
-  return res.status(401).send({ error: 'Needs authentication' });
+  return res.status(403).send({ error: 'Needs authentication' });
 }
 
 function requiresAdmin(req, res, next) {
   if (req.session && req.session.userId && req.session.admin) {
     return next();
   }
-  return res.status(401).send({ error: 'Needs authentication admin' });
+  return res.status(403).send({ error: 'Needs authentication admin' });
 }
 
 app.use('/users', requiresAdmin, userRoutes);

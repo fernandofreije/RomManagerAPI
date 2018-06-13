@@ -42,7 +42,6 @@ User.statics.authenticate = function authenticate(login, password, callback) {
     .then(user => {
       if (!user) {
         const notFoundError = new Error('User not found.');
-        notFoundError.status = 400;
         return callback(notFoundError);
       }
       bcrypt.compare(password, user.password)

@@ -10,7 +10,7 @@ sessionRoutes.post('/login', (req, res) => {
     } else if (user) {
       req.session.userId = user.id;
       req.session.admin = user.admin;
-      return res.status(200).json({ message: 'Login sucessfull' });
+      return res.status(200).json({ user, message: 'Login sucessfull' });
     }
     return res.status(401).json({ message: 'Not able to authenticate' });
   });
