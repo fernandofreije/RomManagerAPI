@@ -37,6 +37,15 @@ User.pre('save', function hashPass(next) {
     .catch(error => next(error));
 });
 
+User.methods.toDTO = function toDTO() {
+  return {
+    id: this.id,
+    email: this.email,
+    username: this.user,
+    admin: this.admin
+  };
+};
+
 User.statics.authenticate = function authenticate(login, password, callback) {
   this.findOne({ $or: [{ email: login }, { user: login }] })
     .then(user => {
@@ -47,7 +56,7 @@ User.statics.authenticate = function authenticate(login, password, callback) {
       bcrypt.compare(password, user.password)
         .then(result => {
           if (result === true) {
-            return callback(null, user);
+            return callback(null, user.toDTO());
           }
           return callback();
         });

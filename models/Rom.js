@@ -3,9 +3,15 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const Rom = new Schema({
+  remoteId: {
+    type: String
+  },
   title: {
     type: String,
     required: true
+  },
+  overview: {
+    type: String
   },
   art: {
     type: String
@@ -20,6 +26,9 @@ const Rom = new Schema({
     type: String
   },
   developer: {
+    type: String
+  },
+  esbr: {
     type: String
   },
   genres: {

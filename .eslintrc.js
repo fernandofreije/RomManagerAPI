@@ -8,7 +8,6 @@ module.exports = {
       "node": true
   },
   "rules": {
-      "linebreak-style": ["error", "windows"],
       "no-console": "off",
       "comma-dangle": "off",
       "arrow-parens": ["error", "as-needed"]

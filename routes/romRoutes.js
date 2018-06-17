@@ -1,4 +1,6 @@
 const express = require('express');
+const fs = require('fs');
+const sanitize = require('sanitize-filename');
 const Rom = require('../models/Rom');
 
 const romRoutes = express.Router();
@@ -28,6 +30,15 @@ romRoutes.route('/:id').get((req, res) => {
     .catch(error => res.status(400).json(error));
 });
 
+romRoutes.route('/:id/file').get((req, res) => {
+  Rom.find({
+    id: req.params.id,
+    user: req.session.userId
+  })
+    .then(rom => res.status(200).sendFile(rom.file))
+    .catch(error => res.status(400).json(error));
+});
+
 //  Defined update router
 romRoutes.route('/:id').put((req, res) => {
   Rom.findAndModify({
@@ -48,17 +59,21 @@ romRoutes.route('/:id').delete((req, res) => {
     .catch(error => res.status(400).json(error));
 });
 
-// Defined delete | remove | destroy route
-romRoutes.route('/:id/upload').post((req, res) => {
-  if (!req.files) return res.status(400).send('No files were uploaded.');
+romRoutes.route('/upload').post((req, res) => {
+  if (!req.files) res.status(400).send('No files were uploaded.');
+  else {
+    const userdir = `${global.basedir}/uploads/roms/${req.session.userId}/`;
+    const { romFile } = req.files;
+    const [fileName, extension] = romFile.name.split('.')
+      .map(x => sanitize(x.replace(' ', '_')));
+    const timestamp = Date.now() / 1000;
 
-  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
-  const { romFile } = req.files;
-
-  // Use the mv() method to place the file somewhere on your server
-  romFile.mv(`${global.basedir}/uploadedRoms/on/your/server/filename.jpg`)
-    .then(file => res.send(`File ${file.name} uploaded!`))
-    .catch(error => res.status(400).json(error));
+    if (!fs.existsSync(userdir)) fs.mkdirSync(userdir);
+    const fileUrl = `${userdir}/${fileName}_${timestamp}.${extension}`;
+    romFile.mv(fileUrl)
+      .then(file => res.json({ file }))
+      .catch(error => res.status(400).json(error));
+  }
 });
 
 module.exports = romRoutes;

@@ -19,18 +19,14 @@ sessionRoutes.post('/login', (req, res) => {
 sessionRoutes.post('/register', (req, res) => {
   const newUser = new User(req.body);
   newUser.admin = false;
-
   newUser.save()
     .then(user => res.status(200).json({ message: `User ${user.email} registered successfully` }))
     .catch(error => res.status(400).send(error));
 });
 
 sessionRoutes.get('/logout', (req, res) => {
-  if (req.session) {
-    req.session.destroy()
-      .then(res.status(200).json({ message: 'Logout' }))
-      .catch(error => res.status(400).send(error));
-  }
+  req.session.destroy();
+  res.status(200).json({ message: 'Logout' });
 });
 
 module.exports = sessionRoutes;
