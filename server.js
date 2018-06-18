@@ -6,6 +6,7 @@ const config = require('./config/DB');
 const docRoutes = require('./routes/docRoutes');
 const userRoutes = require('./routes/userRoutes');
 const romRoutes = require('./routes/romRoutes');
+const scrapperRoutes = require('./routes/scrapperRoutes');
 const sessionRoutes = require('./routes/sessionRoutes');
 const morgan = require('morgan');
 const fileUpload = require('express-fileupload');
@@ -61,6 +62,7 @@ function requiresAdmin(req, res, next) {
 
 app.use('/users', requiresAdmin, userRoutes);
 app.use('/roms/', requiresLogin, romRoutes);
+app.use('/scrap/', requiresLogin, scrapperRoutes);
 app.use('/', sessionRoutes);
 app.use('/', docRoutes);
 

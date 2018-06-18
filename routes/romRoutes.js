@@ -71,9 +71,18 @@ romRoutes.route('/upload').post((req, res) => {
     if (!fs.existsSync(userdir)) fs.mkdirSync(userdir);
     const fileUrl = `${userdir}/${fileName}_${timestamp}.${extension}`;
     romFile.mv(fileUrl)
-      .then(file => res.json({ file }))
+      .then(() => res.json({ fileUrl }))
       .catch(error => res.status(400).json(error));
   }
+});
+
+romRoutes.route('/:id/download').post((req, res) => {
+  Rom.find({
+    _id: req.params.id,
+    user: req.session.userId
+  })
+    .then(rom => res.status(200).download(rom.file))
+    .catch(error => res.status(400).json(error));
 });
 
 module.exports = romRoutes;
