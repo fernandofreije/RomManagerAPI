@@ -1,7 +1,8 @@
 const express = require('express');
-const fs = require('fs');
 const sanitize = require('sanitize-filename');
 const Rom = require('../models/Rom');
+const Platform = require('../models/Platform');
+const shell = require('shelljs');
 
 const romRoutes = express.Router();
 
@@ -55,7 +56,10 @@ romRoutes.route('/:id').delete((req, res) => {
     _id: req.params.id,
     user: req.session.userId
   })
-    .then(rom => res.status(200).json({ message: `Successfully removed rom ${rom.title}` }))
+    .then(rom => {
+      shell.rm(rom.file);
+      res.status(200).json({ message: `Successfully removed rom ${rom.title}` });
+    })
     .catch(error => res.status(400).json(error));
 });
 
@@ -64,11 +68,11 @@ romRoutes.route('/upload').post((req, res) => {
   else {
     const userdir = `${global.basedir}/uploads/roms/${req.session.userId}/`;
     const { romFile } = req.files;
-    const [fileName, extension] = romFile.name.split('.')
-      .map(x => sanitize(x.replace(' ', '_')));
+    const extension = sanitize(romFile.name.split('.').pop());
+    const fileName = sanitize(romFile.name.replace(`.${extension}`, '')).replace(' ', '_');
     const timestamp = Date.now() / 1000;
 
-    if (!fs.existsSync(userdir)) fs.mkdirSync(userdir);
+    shell.mkdir('-p', userdir);
     const fileUrl = `${userdir}/${fileName}_${timestamp}.${extension}`;
     romFile.mv(fileUrl)
       .then(() => res.json({ fileUrl }))
@@ -76,7 +80,7 @@ romRoutes.route('/upload').post((req, res) => {
   }
 });
 
-romRoutes.route('/:id/download').post((req, res) => {
+romRoutes.route('/:id/download').get((req, res) => {
   Rom.find({
     _id: req.params.id,
     user: req.session.userId

@@ -21,6 +21,7 @@
     "mongoose": "^5.1.5",
     "morgan": "^1.9.0",
     "sanitize-filename": "^1.6.1",
+    "shelljs": "^0.8.2",
     "swagger-jsdoc": "^1.9.7",
     "swagger-ui-express": "^3.0.10",
     "thegamesdb": "^0.1.2",
