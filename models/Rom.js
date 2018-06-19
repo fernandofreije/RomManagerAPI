@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Platform = require('../models/Platform');
 
 const { Schema } = mongoose;
 
@@ -41,7 +40,7 @@ const Rom = new Schema({
   developer: {
     type: String
   },
-  esbr: {
+  ESRB: {
     type: String
   },
   genres: {
@@ -75,20 +74,20 @@ Rom.statics.process = function process(response, userId = null) {
     releaseDate: response.releaseDate ? response.releaseDate : null,
     publisher: response.publisher ? response.publisher : null,
     developer: response.developer ? response.developer : null,
-    esbr: response.developer ? response.developer : null,
-    genres: response.genres ? response.geners : null,
+    ESRB: response.ESRB ? response.ESRB : null,
+    genres: response.genres ? response.genres : null,
     platform: response.platform ? response.platform : null,
     file: response.fileUrl ? response.FileUrl : null,
     user: userId,
     boxartFront: response.images && response.images.find(conditionBoxArtFront)
     && response.images.find(conditionBoxArtFront).url ?
-      `http://legacy.thegamesdb.net/banners/_gameviewcache/${response.images.find(conditionBoxArtFront).url}` : null,
+      `http://legacy.thegamesdb.net/banners/_gameviewcache${response.images.find(conditionBoxArtFront).url}` : null,
     boxartBack: response.images && response.images.find(conditionBoxArtBack)
     && response.images.find(conditionBoxArtBack).url ?
-      `http://legacy.thegamesdb.net/banners/_gameviewcache/${response.images.find(conditionBoxArtBack).url}` : null,
+      `http://legacy.thegamesdb.net/banners/_gameviewcache${response.images.find(conditionBoxArtBack).url}` : null,
     clearLogo: response.images && response.images.find(conditionClearLogo)
     && response.images.find(conditionClearLogo).url ?
-      `http://legacy.thegamesdb.net/banners/_gameviewcache/${response.images.find(conditionClearLogo).url}` : null,
+      `http://legacy.thegamesdb.net/banners${response.images.find(conditionClearLogo).url}` : null,
     screenshots: response.images && response.images.filter(conditionScreenshot)
     && response.images.filter(conditionScreenshot).map(x => x.url) ?
       response.images.filter(conditionScreenshot).map(x => `http://legacy.thegamesdb.net/banners/_gameviewcache/${x.url}`) : null,
