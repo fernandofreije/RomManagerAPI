@@ -60,6 +60,29 @@ const Rom = new Schema({
   collection: 'roms'
 });
 
+Rom.methods.toDTO = function toDTO() {
+  return {
+    id: this.id,
+    remoteId: this.remoteId,
+    title: this.title,
+    overview: this.overview,
+    boxartFront: this.boxartFront,
+    boxartBack: this.boxartBack,
+    clearLogo: this.clearLogo,
+    screenshots: this.screenshots,
+    images: this.images,
+    trailer: this.trailer,
+    releaseDate: this.releaseDate,
+    publisher: this.publisher,
+    developer: this.developer,
+    ESRB: this.ESRB,
+    genres: this.genres,
+    platform: this.platform,
+    user: this.user,
+    file: this.file
+  };
+};
+
 Rom.statics.process = function process(response, userId = null) {
   const conditionBoxArtFront = (x => x.type === 'boxart' && x.side === 'front');
   const conditionBoxArtBack = (x => x.type === 'boxart' && x.side === 'back');

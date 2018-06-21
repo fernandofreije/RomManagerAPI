@@ -1,13 +1,13 @@
 const express = require('express');
 const sanitize = require('sanitize-filename');
 const Rom = require('../models/Rom');
-const Platform = require('../models/Platform');
 const shell = require('shelljs');
 
 const romRoutes = express.Router();
 
 romRoutes.route('/').post((req, res) => {
   const newRom = new Rom(req.body);
+  console.log(`created rom ${newRom.title}`);
   newRom.user = req.session.userId;
   newRom.save()
     .then(rom => {
@@ -18,21 +18,21 @@ romRoutes.route('/').post((req, res) => {
 
 romRoutes.route('/').get((req, res) => {
   Rom.find({ user: req.session.userId })
-    .then(roms => res.status(200).json(roms))
+    .then(roms => res.status(200).json(roms.map(x => x.toDTO())))
     .catch(error => res.status(400).json(error));
 });
 
 romRoutes.route('/:id').get((req, res) => {
-  Rom.find({
+  Rom.findOne({
     _id: req.params.id,
     user: req.session.userId
   })
-    .then(rom => res.status(200).json(rom))
+    .then(rom => res.status(200).json(rom.toDTO()))
     .catch(error => res.status(400).json(error));
 });
 
 romRoutes.route('/:id/file').get((req, res) => {
-  Rom.find({
+  Rom.findOne({
     id: req.params.id,
     user: req.session.userId
   })
@@ -52,7 +52,7 @@ romRoutes.route('/:id').put((req, res) => {
 
 // Defined delete | remove | destroy route
 romRoutes.route('/:id').delete((req, res) => {
-  Rom.findAndRemove({
+  Rom.findByIdAndRemove({
     _id: req.params.id,
     user: req.session.userId
   })
@@ -81,7 +81,7 @@ romRoutes.route('/upload').post((req, res) => {
 });
 
 romRoutes.route('/:id/download').get((req, res) => {
-  Rom.find({
+  Rom.findOne({
     _id: req.params.id,
     user: req.session.userId
   })
