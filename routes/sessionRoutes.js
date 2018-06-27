@@ -24,6 +24,16 @@ sessionRoutes.post('/register', (req, res) => {
     .catch(error => res.status(400).send(error));
 });
 
+sessionRoutes.put('/changeData', (req, res) => {
+  if (req.session.userId) {
+    User.findByIdAndUpdate(req.session.userId, req.body)
+      .then(user => res.status(200).json({ message: `Successfully updated user ${user.email}` }))
+      .catch(error => res.status(400).json(error));
+  } else {
+    res.status(403).json('Needs authentication');
+  }
+});
+
 sessionRoutes.get('/logout', (req, res) => {
   req.session.destroy();
   res.status(200).json({ message: 'Logout' });

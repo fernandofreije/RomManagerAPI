@@ -2,7 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const config = require('./config/DB');
+const config = require('./config/config');
 const docRoutes = require('./routes/docRoutes');
 const userRoutes = require('./routes/userRoutes');
 const romRoutes = require('./routes/romRoutes');
@@ -15,12 +15,11 @@ const cors = require('cors');
 
 global.basedir = __dirname;
 
-
 const app = express();
 const port = process.env.PORT || 8080; // set our port
 
 mongoose.Promise = global.Promise;
-mongoose.connect(config.DB).then(
+mongoose.connect(`mongodb://${config.db.host}:${config.db.port}/${config.db.name}`).then(
   () => {
     console.log('Database is connected');
   },

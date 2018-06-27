@@ -6,8 +6,9 @@
   "author": "fernandofreije <ffreijefuente@gmail.com>",
   "license": "ICS",
   "scripts": {
-    "start": "node server.js",
-    "dev": "./node_modules/nodemon/bin/nodemon.js server.js",
+    "start": "NODE_ENV=production node server.js",
+    "dev": "NODE_ENV=dev ./node_modules/nodemon/bin/nodemon.js server.js",
+    "test": "NODE_ENV=test mocha --reporter spec",
     "lint": "eslint --ext .js src ."
   },
   "dependencies": {
