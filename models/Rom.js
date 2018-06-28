@@ -60,18 +60,18 @@ const Rom = new Schema({
   collection: 'roms'
 });
 
-Rom.pre('save', next => {
+Rom.pre('save', function preSave(next) {
+  const rom = this;
   const now = new Date();
-  if (!this.createdAt) {
-    this.createdAt = now;
-    this.updatedAt = now;
+  if (!rom.createdAt) {
+    rom.createdAt = now;
+    rom.updatedAt = now;
   }
   next();
 });
 
-
-Rom.pre('findByIdAndUpdate', next => {
-  this.findOneAndUpdate({}, { $set: { updatedAt: new Date() } });
+Rom.pre('findOneAndUpdate', function preUpdate(next) {
+  this._update.updatedAt = new Date(); // eslint-disable-line no-underscore-dangle
   next();
 });
 

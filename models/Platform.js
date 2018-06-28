@@ -61,17 +61,18 @@ const Platform = new Schema({
   collection: 'platforms'
 });
 
-Platform.pre('save', next => {
+Platform.pre('save', function preSave(next) {
+  const platform = this;
   const now = new Date();
-  if (!this.createdAt) {
-    this.createdAt = now;
-    this.updatedAt = now;
+  if (!platform.createdAt) {
+    platform.createdAt = now;
+    platform.updatedAt = now;
   }
   next();
 });
 
-Platform.pre('findOneAndUpdate', next => {
-  this.findOneAndUpdate({}, { $set: { updatedAt: new Date() } });
+Platform.pre('findOneAndUpdate', function preUpdate(next) {
+  this._update.updatedAt = new Date(); // eslint-disable-line no-underscore-dangle
   next();
 });
 

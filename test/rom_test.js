@@ -7,20 +7,11 @@ const Rom = require('../models/Rom');
 const romTestSession = session(server);
 
 let gameId = null;
+let platformId = null;
 let romData = null;
 let savedRomId = null;
 
-describe('Testing rom methods', () => {
-  before(done => {
-    const newUser = new User({
-      user: 'testuser',
-      email: 'user@retro.com',
-      password: 'test.pass',
-    });
-    newUser.save()
-      .then(() => done());
-  });
-
+describe('Testing rom and normal users methods', () => {
   after(done => {
     User.find().then(users => {
       users.forEach(user => {
@@ -35,6 +26,20 @@ describe('Testing rom methods', () => {
     });
   });
 
+  it('should be able to sign up', done => {
+    romTestSession.post('/register')
+      .send({
+        user: 'testuser',
+        email: 'user@retro.com',
+        password: 'test.pass'
+      })
+      .expect(response => {
+        if (response.body.user.user !== 'testuser') throw new Error('username correctly registered');
+      })
+      .expect(200)
+      .end(done);
+  });
+
   it('should fail accessing his roms', done => {
     romTestSession.get('/roms')
       .expect(403)
@@ -44,6 +49,46 @@ describe('Testing rom methods', () => {
   it('should sign in as normal user', done => {
     romTestSession.post('/login')
       .send({ login: 'testuser', password: 'test.pass' })
+      .expect(200)
+      .end(done);
+  });
+
+  it('should be able to access his roms', done => {
+    romTestSession.get('/roms')
+      .expect(200)
+      .expect(response => {
+        if (response.body.length !== 0) throw new Error('Not all roms returned');
+      })
+      .expect('Content-Type', /json/)
+      .end(done);
+  });
+
+  it('should change his own data', done => {
+    romTestSession.put('/changeData')
+      .send({ user: 'test', password: 'test.pass1' })
+      .expect(200)
+      .expect(response => {
+        if (response.body.user.user !== 'test') throw new Error('username not changed');
+      })
+      .end(done);
+  });
+
+  it('should be able to logout', done => {
+    romTestSession.get('/logout')
+      .expect(200)
+      .end(done);
+  });
+
+  it('shouldn\'t be able to sign in with old username', done => {
+    romTestSession.post('/login')
+      .send({ login: 'testuser', password: 'test.pass' })
+      .expect(401)
+      .end(done);
+  });
+
+  it('should sign in as normal user', done => {
+    romTestSession.post('/login')
+      .send({ login: 'test', password: 'test.pass1' })
       .expect(200)
       .end(done);
   });
@@ -74,6 +119,16 @@ describe('Testing rom methods', () => {
       });
   });
 
+  it('should be able search platform data', done => {
+    romTestSession.get('/scrap/gameList?name=playstation')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((err, response) => {
+        platformId = response.body[0].id;
+        done();
+      });
+  });
+
   it('should be able get rom data', done => {
     romTestSession.get(`/scrap/game?id=${gameId}`)
       .expect(200)
@@ -82,6 +137,13 @@ describe('Testing rom methods', () => {
         romData = response.body;
         done();
       });
+  });
+
+  it('should be able get platform data', done => {
+    romTestSession.get(`/scrap/game?id=${platformId}`)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(done);
   });
 
 

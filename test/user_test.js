@@ -8,7 +8,7 @@ const testSession = session(server);
 
 let createdUserId = null;
 
-describe('Testing users methods', () => {
+describe('Testing users CRUD admin methods', () => {
   before(done => {
     const newUser = new User({
       user: 'admin',
@@ -72,7 +72,7 @@ describe('Testing users methods', () => {
     testSession.get(`/users/${createdUserId}`)
       .expect('Content-Type', /json/)
       .expect(response => {
-        if (response.body.user.username !== 'testuser') throw new Error('Not correct user returned');
+        if (response.body.user.user !== 'testuser') throw new Error('Not correct user returned');
       })
       .expect(200)
       .end(done);

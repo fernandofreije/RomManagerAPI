@@ -27,12 +27,12 @@ const User = new Schema({
   collection: 'users'
 });
 
-User.pre('save', function hashPass(next) {
+User.pre('save', function preSave(next) {
   const user = this;
   const now = new Date();
-  if (!this.createdAt) {
-    this.createdAt = now;
-    this.updatedAt = now;
+  if (!user.createdAt) {
+    user.createdAt = now;
+    user.updatedAt = now;
   }
   bcrypt.hash(user.password, 10)
     .then(hash => {
@@ -42,8 +42,12 @@ User.pre('save', function hashPass(next) {
     .catch(error => next(error));
 });
 
-User.pre('findByIdAndUpdate', next => {
-  this.findOneAndUpdate({}, { $set: { updatedAt: new Date() } });
+User.pre('findOneAndUpdate', function preUpdate(next) {
+  this._update.updatedAt = new Date(); // eslint-disable-line no-underscore-dangle
+  if (this._update.password) { // eslint-disable-line no-underscore-dangle
+    this._update.password = bcrypt // eslint-disable-line no-underscore-dangle
+      .hashSync(this._update.password, 10); // eslint-disable-line no-underscore-dangle
+  }
   next();
 });
 
@@ -51,7 +55,7 @@ User.methods.toDTO = function toDTO() {
   return {
     id: this.id,
     email: this.email,
-    username: this.user,
+    user: this.user,
     admin: this.admin
   };
 };
