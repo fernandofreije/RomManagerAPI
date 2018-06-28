@@ -43,7 +43,7 @@ app.use(session({
 
 app.use(cors({
   origin(origin, callback) {
-    if (config.whitelistedOrigins.indexOf(origin) !== -1) {
+    if (!origin || config.whitelistedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));

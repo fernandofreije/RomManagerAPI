@@ -110,7 +110,7 @@ scrapperRoutes.route('/gameList').get((req, res) => {
    *        type: String
    *     responses:
    *       200:
-   *         description: return game data of specific game 
+   *         description: return game data of specific game
    *         schema:
    *           type: object
    *           $ref: '#/definitions/Rom'
