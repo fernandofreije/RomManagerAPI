@@ -42,7 +42,7 @@ app.use(session({
 }));
 
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://rom-manager-api.herokuapp.com/'],
+  origin: ['http://localhost:3000', 'https://retroemulator.netlify.com/'],
   credentials: true
 }));
 
