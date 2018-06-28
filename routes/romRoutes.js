@@ -26,7 +26,7 @@ romRoutes.route('/:id').get((req, res) => {
     _id: req.params.id,
     user: req.session.userId
   })
-    .then(rom => res.status(200).json(rom.toDTO()))
+    .then(rom => res.status(200).json({ rom: rom.toDTO() }))
     .catch(error => res.status(400).json(error));
 });
 
@@ -56,7 +56,7 @@ romRoutes.route('/:id').delete((req, res) => {
     user: req.session.userId
   })
     .then(rom => {
-      shell.rm(rom.file);
+      if (shell.test('-e', rom.file)) shell.rm(rom.file);
       res.status(200).json({ rom: rom.toDTO() });
     })
     .catch(error => res.status(400).json(error));

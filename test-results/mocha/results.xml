@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="3.8089999999999997" tests="23" failures="0">
+  <testsuite name="Root Suite" timestamp="2018-06-28T14:30:22" tests="0" failures="0" time="0">
+  </testsuite>
+  <testsuite name="Testing rom methods" timestamp="2018-06-28T14:30:22" tests="15" file="/mnt/d/dampe/Documents/TFG/RomManagerAPI/test/rom_test.js" failures="0" time="3.695">
+    <testcase name="Testing rom methods should fail accessing his roms" time="0.011" classname="should fail accessing his roms">
+    </testcase>
+    <testcase name="Testing rom methods should sign in as normal user" time="2.044" classname="should sign in as normal user">
+    </testcase>
+    <testcase name="Testing rom methods should be able to access his roms" time="0.955" classname="should be able to access his roms">
+    </testcase>
+    <testcase name="Testing rom methods should not be able to access his users" time="0.002" classname="should not be able to access his users">
+    </testcase>
+    <testcase name="Testing rom methods should be able search rom data" time="0.416" classname="should be able search rom data">
+    </testcase>
+    <testcase name="Testing rom methods should be able get rom data" time="0.212" classname="should be able get rom data">
+    </testcase>
+    <testcase name="Testing rom methods should be able to upload a rom" time="0.027" classname="should be able to upload a rom">
+    </testcase>
+    <testcase name="Testing rom methods should be able to create a rom" time="0.004" classname="should be able to create a rom">
+    </testcase>
+    <testcase name="Testing rom methods should be able to access his roms and the new one" time="0.003" classname="should be able to access his roms and the new one">
+    </testcase>
+    <testcase name="Testing rom methods should be able to download a rom file" time="0.006" classname="should be able to download a rom file">
+    </testcase>
+    <testcase name="Testing rom methods should be able to update a rom" time="0.005" classname="should be able to update a rom">
+    </testcase>
+    <testcase name="Testing rom methods should be able to access a particular rom data" time="0.003" classname="should be able to access a particular rom data">
+    </testcase>
+    <testcase name="Testing rom methods should be able to delete a rom" time="0.005" classname="should be able to delete a rom">
+    </testcase>
+    <testcase name="Testing rom methods should be able to logout" time="0.001" classname="should be able to logout">
+    </testcase>
+    <testcase name="Testing rom methods should fail accessing roms after logout" time="0.001" classname="should fail accessing roms after logout">
+    </testcase>
+  </testsuite>
+  <testsuite name="Testing users methods" timestamp="2018-06-28T14:30:28" tests="8" file="/mnt/d/dampe/Documents/TFG/RomManagerAPI/test/user_test.js" failures="0" time="0.11400000000000002">
+    <testcase name="Testing users methods should fail accessing main page" time="0.002" classname="should fail accessing main page">
+    </testcase>
+    <testcase name="Testing users methods should sign in as admin" time="0.048" classname="should sign in as admin">
+    </testcase>
+    <testcase name="Testing users methods should be able to create a user" time="0.05" classname="should be able to create a user">
+    </testcase>
+    <testcase name="Testing users methods should be able to see users" time="0.003" classname="should be able to see users">
+    </testcase>
+    <testcase name="Testing users methods should be able to a particular user" time="0.002" classname="should be able to a particular user">
+    </testcase>
+    <testcase name="Testing users methods should be able to update users" time="0.003" classname="should be able to update users">
+    </testcase>
+    <testcase name="Testing users methods should be able to delete users" time="0.003" classname="should be able to delete users">
+    </testcase>
+    <testcase name="Testing users methods should not be able to see the deleted user" time="0.003" classname="should not be able to see the deleted user">
+    </testcase>
+  </testsuite>
+</testsuites>

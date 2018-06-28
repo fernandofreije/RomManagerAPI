@@ -56,11 +56,6 @@ User.methods.toDTO = function toDTO() {
   };
 };
 
-User.pre('findOneAndUpdate', next => {
-  this.findOneAndUpdate({}, { $set: { updatedAt: new Date() } });
-  next();
-});
-
 User.statics.authenticate = function authenticate(login, password, callback) {
   this.findOne({ $or: [{ email: login }, { user: login }] })
     .then(user => {

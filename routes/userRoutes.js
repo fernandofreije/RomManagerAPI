@@ -31,7 +31,7 @@ const userRoutes = express.Router();
 userRoutes.route('/').post((req, res) => {
   const newUser = new User(req.body);
   newUser.save()
-    .then(user => res.status(200).json({ message: `User ${user.email} added successfully` }))
+    .then(user => res.status(200).json({ user: user.toDTO() }))
     .catch(error => res.status(400).send(error));
 });
 
@@ -53,7 +53,7 @@ userRoutes.route('/').post((req, res) => {
    */
 userRoutes.route('/').get((req, res) => {
   User.find()
-    .then(users => res.status(200).json(users))
+    .then(users => res.status(200).json(users.map(x => x.toDTO())))
     .catch(error => res.status(400).json(error));
 });
 
@@ -61,13 +61,13 @@ userRoutes.route('/').get((req, res) => {
 userRoutes.route('/:id').get((req, res) => {
   const { id } = req.params;
   User.findById(id)
-    .then(user => res.status(200).json(user))
+    .then(user => res.status(200).json({ user: user.toDTO() }))
     .catch(error => res.status(400).json(error));
 });
 
 userRoutes.route('/:id').put((req, res) => {
   User.findByIdAndUpdate(req.params.id, req.body, { new: true })
-    .then(user => res.status(200).json({ message: `Successfully updated user ${user.email}` }))
+    .then(user => res.status(200).json({ user: user.toDTO() }))
     .catch(error => res.status(400).json(error));
 });
 
@@ -75,8 +75,9 @@ userRoutes.route('/:id').put((req, res) => {
 userRoutes.route('/:id').delete((req, res) => {
   User.findByIdAndRemove(req.params.id)
     .then(user => {
-      shell.rm(`${global.basedir}/uploads/roms/${user.id}`);
-      res.status(200).json({ message: `Successfully removed user ${user.id}` });
+      const path = `${global.basedir}/uploads/roms/${user.id}`;
+      if (shell.test('-e', path)) shell.rm('-r', path);
+      res.status(200).json({ user: user.toDTO() });
       Rom.remove({ user: user.id });
     })
     .catch(error => res.status(400).json(error));
