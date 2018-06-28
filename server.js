@@ -42,7 +42,13 @@ app.use(session({
 }));
 
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://retroemulator.netlify.com/'],
+  origin(origin, callback) {
+    if (config.whitelistedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 

@@ -1,10 +1,15 @@
 // config.js
 const env = process.env.NODE_ENV;
 
-const production = {
+const common = {
   app: {
     port: 8080
   },
+  whitelistedOrigins: ['http://localhost:3000', 'https://retroemulator.netlify.com']
+};
+
+
+const production = {
   db: {
     host: 'heroku_gtck55gp:odgdkfcuicimbid65gmudjonjo@ds121311.mlab.com',
     port: 21311,
@@ -14,9 +19,6 @@ const production = {
 };
 
 const dev = {
-  app: {
-    port: 8080
-  },
   db: {
     host: 'localhost',
     port: 27017,
@@ -26,9 +28,6 @@ const dev = {
 };
 
 const test = {
-  app: {
-    port: 8080
-  },
   db: {
     host: 'localhost',
     port: 27017,
@@ -41,4 +40,4 @@ const config = {
   dev,
   test
 };
-module.exports = config[env];
+module.exports = Object.assign({}, common, config[env]);
