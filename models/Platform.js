@@ -61,6 +61,20 @@ const Platform = new Schema({
   collection: 'platforms'
 });
 
+Platform.pre('save', next => {
+  const now = new Date();
+  if (!this.createdAt) {
+    this.createdAt = now;
+    this.updatedAt = now;
+  }
+  next();
+});
+
+Platform.pre('findOneAndUpdate', next => {
+  this.findOneAndUpdate({}, { $set: { updatedAt: new Date() } });
+  next();
+});
+
 Platform.statics.process = function process(response) {
   return {
     remoteId: response.id ? response.id : null,

@@ -1,4 +1,5 @@
 const express = require('express');
+const shell = require('shelljs');
 
 /**
  * @swagger
@@ -21,6 +22,8 @@ const express = require('express');
  *            type: string
  */
 const User = require('../models/User');
+
+const Rom = require('../models/Rom');
 
 const userRoutes = express.Router();
 
@@ -63,7 +66,7 @@ userRoutes.route('/:id').get((req, res) => {
 });
 
 userRoutes.route('/:id').put((req, res) => {
-  User.findByIdAndUpdate(req.params.id, req.body)
+  User.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then(user => res.status(200).json({ message: `Successfully updated user ${user.email}` }))
     .catch(error => res.status(400).json(error));
 });
@@ -71,7 +74,11 @@ userRoutes.route('/:id').put((req, res) => {
 // Defined delete | remove | destroy route
 userRoutes.route('/:id').delete((req, res) => {
   User.findByIdAndRemove(req.params.id)
-    .then(user => res.status(200).json(`Successfully removed user ${user.email}`))
+    .then(user => {
+      shell.rm(`${global.basedir}/uploads/roms/${user.id}`);
+      res.status(200).json({ message: `Successfully removed user ${user.id}` });
+      Rom.remove({ user: user.id });
+    })
     .catch(error => res.status(400).json(error));
 });
 

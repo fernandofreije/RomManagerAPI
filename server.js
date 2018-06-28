@@ -31,7 +31,8 @@ mongoose.connect(`mongodb://${config.db.host}:${config.db.port}/${config.db.name
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(fileUpload());
-app.use(morgan('dev'));
+
+if (process.env.NODE_ENV !== 'test') app.use(morgan(config.logStyle));
 
 app.use(session({
   genid: () => uuid(),
@@ -69,3 +70,6 @@ app.use('/', docRoutes);
 // =============================================================================
 app.listen(port);
 console.log(`Magic happens on port ${port}`);
+
+module.exports = app;
+

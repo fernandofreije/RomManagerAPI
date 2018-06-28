@@ -9,7 +9,8 @@ const production = {
     host: 'heroku_gtck55gp:odgdkfcuicimbid65gmudjonjo@ds121311.mlab.com',
     port: 21311,
     name: 'heroku_gtck55gp'
-  }
+  },
+  logStyle: 'combined'
 };
 
 const dev = {
@@ -20,7 +21,8 @@ const dev = {
     host: 'localhost',
     port: 27017,
     name: 'rommanager'
-  }
+  },
+  logStyle: 'dev'
 };
 
 const test = {

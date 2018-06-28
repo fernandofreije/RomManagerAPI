@@ -6,6 +6,7 @@ const sessionRoutes = express.Router();
 sessionRoutes.post('/login', (req, res) => {
   User.authenticate(req.body.login, req.body.password, (error, user) => {
     if (error) {
+      console.log(error);
       return res.status(401).json(error);
     } else if (user) {
       req.session.userId = user.id;

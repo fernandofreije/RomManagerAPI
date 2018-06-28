@@ -29,12 +29,22 @@ const User = new Schema({
 
 User.pre('save', function hashPass(next) {
   const user = this;
+  const now = new Date();
+  if (!this.createdAt) {
+    this.createdAt = now;
+    this.updatedAt = now;
+  }
   bcrypt.hash(user.password, 10)
     .then(hash => {
       user.password = hash;
       return next();
     })
     .catch(error => next(error));
+});
+
+User.pre('findByIdAndUpdate', next => {
+  this.findOneAndUpdate({}, { $set: { updatedAt: new Date() } });
+  next();
 });
 
 User.methods.toDTO = function toDTO() {
@@ -45,6 +55,11 @@ User.methods.toDTO = function toDTO() {
     admin: this.admin
   };
 };
+
+User.pre('findOneAndUpdate', next => {
+  this.findOneAndUpdate({}, { $set: { updatedAt: new Date() } });
+  next();
+});
 
 User.statics.authenticate = function authenticate(login, password, callback) {
   this.findOne({ $or: [{ email: login }, { user: login }] })

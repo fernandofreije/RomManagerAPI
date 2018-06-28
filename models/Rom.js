@@ -60,6 +60,21 @@ const Rom = new Schema({
   collection: 'roms'
 });
 
+Rom.pre('save', next => {
+  const now = new Date();
+  if (!this.createdAt) {
+    this.createdAt = now;
+    this.updatedAt = now;
+  }
+  next();
+});
+
+
+Rom.pre('findByIdAndUpdate', next => {
+  this.findOneAndUpdate({}, { $set: { updatedAt: new Date() } });
+  next();
+});
+
 Rom.methods.toDTO = function toDTO() {
   return {
     id: this.id,

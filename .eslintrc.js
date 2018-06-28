@@ -10,6 +10,6 @@ module.exports = {
   "rules": {
       "no-console": "off",
       "comma-dangle": "off",
-      "arrow-parens": ["error", "as-needed"]
+      "arrow-parens": ["error", "as-needed"],
   }
 }

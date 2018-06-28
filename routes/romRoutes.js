@@ -7,11 +7,10 @@ const romRoutes = express.Router();
 
 romRoutes.route('/').post((req, res) => {
   const newRom = new Rom(req.body);
-  console.log(`created rom ${newRom.title}`);
   newRom.user = req.session.userId;
   newRom.save()
     .then(rom => {
-      res.status(200).json({ message: `Rom ${rom.title} added successfully` });
+      res.status(200).json({ rom: rom.toDTO() });
     })
     .catch(error => res.status(400).send(error));
 });
@@ -42,12 +41,12 @@ romRoutes.route('/:id/file').get((req, res) => {
 
 //  Defined update router
 romRoutes.route('/:id').put((req, res) => {
-  Rom.findAndModify({
+  Rom.findByIdAndUpdate({
     _id: req.params.id,
     user: req.session.userId
-  }, req.body)
-    .then(rom => res.status(200).json({ message: `Successfully updated rom ${rom.title}` }))
-    .catch(error => res.status(400).json(error));
+  }, req.body, { new: true })
+    .then(rom => res.status(200).json({ rom: rom.toDTO() }))
+    .catch(error => console.log(error));
 });
 
 // Defined delete | remove | destroy route
@@ -58,7 +57,7 @@ romRoutes.route('/:id').delete((req, res) => {
   })
     .then(rom => {
       shell.rm(rom.file);
-      res.status(200).json({ message: `Successfully removed rom ${rom.title}` });
+      res.status(200).json({ rom: rom.toDTO() });
     })
     .catch(error => res.status(400).json(error));
 });

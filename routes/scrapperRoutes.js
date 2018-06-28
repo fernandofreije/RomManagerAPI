@@ -45,7 +45,6 @@ scrapperRoutes.route('/updatePlatformList').get((req, res) => {
               { upsert: true }
             ).catch(err => {
               console.log(err);
-              console.log(response);
             });
           });
       });
