@@ -40,6 +40,13 @@ describe('Testing users CRUD admin methods', () => {
       .end(done);
   });
 
+  it('should not be able to sign in with wrong credentials', done => {
+    testSession.post('/login')
+      .send({ login: 'adminbad', password: 'admin.pass' })
+      .expect(401)
+      .end(done);
+  });
+
   it('should sign in as admin', done => {
     testSession.post('/login')
       .send({ login: 'admin', password: 'admin.pass' })

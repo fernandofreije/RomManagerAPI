@@ -13,6 +13,12 @@ const fileUpload = require('express-fileupload');
 const uuid = require('uuid/v4');
 const cors = require('cors');
 
+// Hack to to access the legacy API of thegamesdb
+const metadata = require('thegamesdb/lib/metadata');
+
+metadata.endpoint = 'http://legacy.thegamesdb.net/api';
+//-----------------------------------------------
+
 global.basedir = __dirname;
 
 const app = express();

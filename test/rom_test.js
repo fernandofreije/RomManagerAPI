@@ -86,6 +86,13 @@ describe('Testing rom and normal users methods', () => {
       .end(done);
   });
 
+  it('shouldnt be able to access his roms', done => {
+    romTestSession.get('/roms')
+      .expect(403)
+      .expect('Content-Type', /json/)
+      .end(done);
+  });
+
   it('should sign in as normal user', done => {
     romTestSession.post('/login')
       .send({ login: 'test', password: 'test.pass1' })
@@ -140,7 +147,7 @@ describe('Testing rom and normal users methods', () => {
   });
 
   it('should be able get platform data', done => {
-    romTestSession.get(`/scrap/game?id=${platformId}`)
+    romTestSession.get(`/scrap/platform?id=${platformId}`)
       .expect(200)
       .expect('Content-Type', /json/)
       .end(done);
@@ -212,6 +219,16 @@ describe('Testing rom and normal users methods', () => {
   it('should be able to delete a rom', done => {
     romTestSession.delete(`/roms/${savedRomId}`)
       .expect(200)
+      .expect('Content-Type', /json/)
+      .end(done);
+  });
+
+  it('should be able to access his roms and get none', done => {
+    romTestSession.get('/roms')
+      .expect(200)
+      .expect(response => {
+        if (response.body.length !== 0) throw new Error('Not all roms returned');
+      })
       .expect('Content-Type', /json/)
       .end(done);
   });
