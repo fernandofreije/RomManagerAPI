@@ -5,7 +5,11 @@ const common = {
   app: {
     port: 8080
   },
-  whitelistedOrigins: ['http://localhost:3000', 'https://retroemulator.netlify.com']
+  whitelistedOrigins: [
+    'http://localhost:3000',
+    'https://retroemulator.netlify.com',
+    'http://retroemulator.netlify.com'
+  ]
 };
 
 
